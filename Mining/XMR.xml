@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <string>genalby.somee.com</string>
+  <string>services.gweone.com</string>
+  <string>s1-affiliate.somee.com</string>
+  <string>s2-affiliate.somee.com</string>
+  <string>s3-affiliate.somee.com</string>
+  <string>s4-affiliate.somee.com</string>
+  <string>s6-affiliate.somee.com</string>
+  <string>s1-affiliate-11.somee.com</string>
+  <string>s3-affiliate-1.somee.com</string>
+  <string>s7-affiliate-1.somee.com</string>
+</ArrayOfString>

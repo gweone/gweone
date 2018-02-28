@@ -1,0 +1,68 @@
+﻿@{
+    var ddlType = new List<SelectListItem>() {
+        new SelectListItem() { Text = "File", Value = Gweone.Models.TypePath.File.ToString(), Selected= true },
+        new SelectListItem() { Text = "Directory", Value = Gweone.Models.TypePath.Directory.ToString() }
+    };
+}
+
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Upload</h3>
+        <div class="box-tools">
+        </div>
+    </div>
+    @using (Html.BeginForm("Upload", "FileManager", FormMethod.Post, new { @class = "form-horizontal form-fileManager", enctype = "multipart/form-data" }))
+    {
+        <div class="box-body">
+            @Html.ValidationSummary("")
+            @Html.Hidden("path", ViewBag.CurrentPath as string)
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="CategoryCode">
+                    Type <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.DropDownList("pathType", ddlType, new
+               {
+                   @class = "form-control col-md-7 col-xs-12",
+                   onchange = "if(this.value == 'File'){$(this).parents('form').find('.u-file').fadeIn();$(this).parents('form').find('.u-directory').fadeOut();}else{$(this).parents('form').find('.u-file').fadeOut();$(this).parents('form').find('.u-directory').fadeIn();}"
+               })
+                </div>
+            </div>
+            <div class="form-group u-file u-file-dialog">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file">
+                    File <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12 ">
+                    @Html.TextBox("file", "", new { @class = "form-control", type = "file" })
+                </div>
+            </div>
+            <div class="form-group u-file">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file">
+
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12 ">
+                    <button type="button" class="btn btn-primary" onclick="var f = $('.u-file-dialog').clone().removeClass('u-file-dialog'); f.insertAfter('.u-file-dialog')"><i class="fa fa-plus"></i> Add</button>
+                </div>
+            </div>
+            <div class="form-group u-directory" style="display:none">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="CategoryCode">
+                    Directory <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12 u-directory">
+                    @Html.TextBox("directory", "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group u-file">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="CategoryCode">
+                    Unzip ? <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.CheckBox("unzip", false, new { })
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <button type="submit" class="btn btn-primary pull-right">Upload</button>
+        </div>
+    }
+</div>

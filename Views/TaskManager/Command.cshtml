@@ -1,0 +1,44 @@
+﻿@model Gweone.Models.ECSService
+<div class="box" id="pagedList">
+    <div class="box-header with-border">
+        <h3 class="box-title">Process Command</h3>
+        <div class="box-tools">
+
+        </div>
+    </div>
+    @using (Html.BeginForm("Command", "TaskManager", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <div class="box-body">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(fld => fld.Id)
+            @Html.HiddenFor(fld => fld.ServicePath)
+
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.Result, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10" style="white-space: pre-line" id="cmdOutput">
+                    @Model.Result
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ServiceCommand, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(m => m.ServiceCommand, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <button type="submit" class="btn btn-primary pull-right">Execute</button>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    function getOutput() {
+        $.get('@Url.Action("GetOutput", new { Model.Id })', {}, function (data) {
+            $("#cmdOutput").text(data);
+            getOutput();
+        });
+    }
+    ecs.ready(getOutput);
+</script>

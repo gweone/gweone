@@ -1,0 +1,136 @@
+﻿@model Gweone.Service.Models.MiningInfo
+    @{ 
+        IEnumerable<SelectListItem> pools = new [] {
+            "xmrpool.eu",
+            "moneropool.com",
+            "monero.crypto-pool.fr",
+            "monerohash.com",
+            "minexmr.com",
+            "usxmrpool.com",
+            "supportxmr.com",
+            "moneroocean.stream",
+            "minemonero.pro",
+            "xmr.prohash.net",
+            "minercircle.com",
+            "poolmining.org",
+            "xmr.nanopool.org",
+            "xmrminerpro.com",
+            "dwarfpool.com",
+            "xmrpool.net",
+            "monero.hashvault.pro"
+        }.Select(x => new SelectListItem() { Text = x, Value = x });
+    }
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()    
+    <div class="form-horizontal">
+        <h4>MiningInfo</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Started)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Pool, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Pool, pools, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Pool, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumThreads, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumThreads, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumThreads, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Start" name="Action" class="btn btn-default" />
+            </div>
+        </div>
+
+        @if (Model.Started)
+        {
+            <div class="form-group">
+                <label class="control-label col-md-2">Result</label>
+                <div class="col-md-10">
+                    <textarea class="form-control" id="texta" style="max-width:none;width:100%!important;height:300px"></textarea>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                function addText(obj) {
+                    var elem = document.getElementById("texta");
+                    var lines = elem.value.split('\n');
+                    if(lines.length > 9)
+                        lines.splice(0,1);
+                    elem.value = lines.join('\n');
+                    elem.value += "[" + new Date().toLocaleString() + "] ";
+
+                    if (obj.identifier === "job")
+                        elem.value += "new job: " + obj.job_id;
+                    else if (obj.identifier === "solved")
+                        elem.value += "solved job: " + obj.job_id;
+                    else if (obj.identifier === "hashsolved")
+                        elem.value += "pool accepted hash!";
+                    else if (obj.identifier === "error")
+                        elem.value += "error: " + obj.param;
+                    else elem.value += obj;
+
+                    elem.value += "\n";
+                    elem.scrollTop = elem.scrollHeight;
+                }
+
+                ecs.ready(function(){
+                    startMining("@Model.Pool",
+                    "@Model.Login",
+                    "@Model.Password",
+                    @Model.NumThreads,
+                    "@Model.UserId");
+
+                    addText("Connecting...");
+
+                    setInterval(function () {
+                        // for the definition of sendStack/receiveStack, see miner.js
+                        while (sendStack.length > 0) addText((sendStack.pop()));
+                        while (receiveStack.length > 0) addText((receiveStack.pop()));
+                        addText("calculated " + totalhashes + " hashes.");
+                    }, 2000);
+                });
+        
+
+            </script>
+        }
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/miner")
+}

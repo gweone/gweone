@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ArrayOfReferral xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Referral>
+    <Code>42871.492820150466</Code>
+    <Name>Julka Hendri</Name>
+    <Kota>Bekasi</Kota>
+    <KTP>1.23123123123E11</KTP>
+    <Hp>8.5278547096E10</Hp>
+    <Markup>50</Markup>
+  </Referral>
+</ArrayOfReferral>

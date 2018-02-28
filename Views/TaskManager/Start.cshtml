@@ -1,0 +1,48 @@
+﻿@model Gweone.Models.ECSService
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Start</h3>
+        <div class="box-tools">
+        </div>
+    </div>
+    @using (Html.BeginForm("Start", "TaskManager", FormMethod.Post, new { @class = "form-horizontal form-mCategory" }))
+    {
+        <div class="box-body">
+            @Html.ValidationSummary("")
+            @Html.HiddenFor(fld => fld.Id)
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ServicePath">
+                    @Html.DisplayNameFor(fld => fld.ServicePath) <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.TextBoxFor(fld => fld.ServicePath, new { @class = "form-control col-md-7 col-xs-12" })
+                    @Html.ValidationMessageFor(m => m.ServicePath, "", new { @class = "hidden" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ServiceCommand">
+                    @Html.DisplayNameFor(fld => fld.ServiceCommand) <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.TextBoxFor(fld => fld.ServiceCommand, new { @class = "form-control col-md-7 col-xs-12" })
+                    @Html.ValidationMessageFor(m => m.ServiceCommand, "", new { @class = "hidden" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ServiceCommand">
+                    @Html.DisplayNameFor(fld => fld.UseShell) <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.CheckBoxFor(fld => fld.UseShell, new { @class = "form-control col-md-7 col-xs-12" })
+                    @Html.ValidationMessageFor(m => m.UseShell, "", new { @class = "hidden" })
+                </div>
+            </div>
+
+        </div>
+        <div class="box-footer">
+            <button type="submit" class="btn btn-primary pull-right">Start</button>
+        </div>
+    }
+</div>

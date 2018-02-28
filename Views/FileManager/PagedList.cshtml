@@ -1,0 +1,151 @@
+﻿@using ECS.Data
+@using Gweone.Models
+@model IPagedList<FileManagerModel>
+
+<div class="box" id="pagedList">
+    <div class="box-header with-border">
+        <h3 class="box-title">File Manager</h3>
+        <h5>@ViewBag.CurrentPath</h5>
+        <div class="box-tools">
+            <a class="btn btn-primary btn-create" href="@Url.Action("Upload", "FileManager", new { path = ViewBag.CurrentPath  })"><i class="fa fa-plus"></i> Upload</a>
+            <a class="btn btn-success btn-move" href="@Url.Action("Move")"><i class="fa fa-exchange-alt"></i> Move</a>
+            <a class="btn btn-danger btn-remove" href="@Url.Action("Remove")"><i class="fa fa-trash"></i> Remove</a>
+            <form class="pull-right" action="" method="get">
+                <div class="input-group">
+                    <input type="hidden" name="path" value="@ViewBag.CurrentPath" />
+                    <input class="form-control" type="text" name="searchPattern" placeholder="Search..." />
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body no-padding">
+        <div class="row">
+            <div class="col-xs-12 table-responsive">
+                <table class="table table-bordered table-striped table-fileManager">
+                    <thead>
+                        <tr>
+                            @if (Model.Count > 0)
+                            {
+                                <th style="width: 50px" class="text-center">
+                                    <input type="checkbox" name="tblSelectAll" />
+                                </th>
+                            }
+                            <th class="text-center">
+                                Name
+                            </th>
+                            <th class="text-center">
+                                Type
+                            </th>
+                            <th class="text-center">
+                                Extention
+                            </th>
+                            <th class="text-center">
+                                Size
+                            </th>
+                            <th class="text-center">
+                                LastModify
+                            </th>
+                            @if (Model.Count > 0)
+                            {
+                                <th class="text-center" style="width: 150px">
+                                    Action
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (FileManagerModel entity in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <input data-id="@entity.FullName" data-subid="@entity.TypePath" type="checkbox" name="tblSelectItem" />
+                                </td>
+                                <td>
+                                    @if (entity.TypePath == TypePath.Directory)
+                                    {
+                                        <a href="@Url.Action("PagedList", new { path = entity.FullName })">@entity.Name</a>
+                                    }
+                                    else
+                                    {
+                                        @(entity.Name)
+                                    }
+                                </td>
+                                <td>@entity.TypePath</td>
+                                <td>@entity.Extention</td>
+                                <td>
+                                    @if (entity.TypePath == TypePath.Directory)
+                                    {
+                                        <i class="fa fa-spinner fa-pulse fa-pw size-loader" data-id="@entity.FullName"></i>
+                                    }
+                                    else
+                                    {
+                                        <span>@entity.Size</span>
+                                    }
+                                </td>
+                                <td>@entity.LastModify</td>
+                                <td>
+                                    <a href="@Url.Action("Rename", new { entity.FullName })" class="btn btn-primary btn-rename"><i class="fa fa-edit"></i> Rename</a>
+                                    @if (entity.TypePath == TypePath.File)
+                                    {
+                                        <a href="@Url.Action("Download", new { entity.FullName })" class="btn btn-primary btn-download"><i class="fa fa-edit"></i> Download</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Zip", new { entity.FullName })" class="btn btn-primary btn-download"><i class="fa fa-edit"></i> Zip</a>
+                                    }
+
+                                    @if (entity.TypePath == TypePath.File && Path.GetExtension(entity.FullName) == ".zip")
+                                    {
+                                        <a href="@Url.Action("Unzip", new { entity.FullName })" class="btn btn-primary btn-download"><i class="fa fa-edit"></i>Unzip</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                        @if (Model.Count <= 0)
+                        {
+                            <tr>
+                                <td class="text-center" colspan="5">
+                                    Data not available
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                Pager
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+</div>
+<script type="text/javascript">
+    ecs.ready(function () {
+        $(".btn-remove").off('click').on('click', function () {
+            var selectedItems = [];
+            $.each($('[name=tblSelectItem]:checked'), function (i, el) {
+                selectedItems.push({ name: '[' + i + '].FullName', value: $(el).data('id') });
+                selectedItems.push({ name: '[' + i + '].TypePath', value: $(el).data('subid') });
+            });
+            $.post(this.href, selectedItems, function (data) { window.location.reload(); }, 'json');
+            return false;
+        });
+
+        $(".btn-move").off('click').on('click', function () {
+            var selectedItems = [];
+            var l = prompt("Move Location (Overwrite!)");
+            selectedItems.push({ name: "destination", value: l });
+            $.each($('[name=tblSelectItem]:checked'), function (i, el) {
+                selectedItems.push({ name: '[' + i + '].FullName', value: $(el).data('id') });
+                selectedItems.push({ name: '[' + i + '].TypePath', value: $(el).data('subid') });
+            });
+            $.post(this.href, selectedItems, function (data) { window.location.reload(); }, 'json');
+            return false;
+        });
+    });
+
+</script>

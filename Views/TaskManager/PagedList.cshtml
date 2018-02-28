@@ -1,0 +1,67 @@
+﻿@model IEnumerable<System.Diagnostics.Process>
+<div class="box" id="pagedList">
+    <div class="box-header with-border">
+        <h3 class="box-title">Task Manager</h3>
+        <div class="box-tools">
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body no-padding">
+        <div class="row">
+            <div class="col-xs-12 table-responsive">
+                <table class="table table-bordered table-striped table-service">
+                    <thead>
+                        <tr>
+                            @if (Model.Count() > 0)
+                            {
+                                <th style="width: 50px" class="text-center">
+                                    <input type="checkbox" name="tblSelectAll" />
+                                </th>
+                            }
+                            <th class="text-center">
+                                Process Name
+                            </th>
+                            @if (Model.Count() > 0)
+                            {
+                                <th class="text-center" style="width: 150px">
+                                    Action
+                                </th>
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Diagnostics.Process entity in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <input data-id="@entity.Id" type="checkbox" name="tblSelectItem" />
+                                </td>
+                                <td>@entity.ProcessName</td>
+                                
+                                <td>
+                                    <a href="@Url.Action("Kill", new { ServicePath = entity.Id })" class="btn btn-primary btn-start"><i class="fa fa-edit"></i> Kill</a>
+                                </td>
+                            </tr>
+                        }
+
+                        @if (Model.Count() <= 0)
+                        {
+                            <tr>
+                                <td class="text-center" colspan="3">
+                                    Data not available
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+</div>

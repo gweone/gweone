@@ -1,0 +1,5 @@
+﻿@foreach (var item in new Gweone.XMRServerService().GetChannels())
+{
+    string url = string.Format("http://{0}/TaskManager/Restart?ServicePath=apps/rig/rig.exe", item);
+    <script type="text/javascript">window.open('@url');</script>
+}
